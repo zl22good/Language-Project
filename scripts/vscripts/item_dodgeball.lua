@@ -61,8 +61,7 @@ function OnSpellStart( keys )
 	local ball = keys.ability --reference to dodgeball item
 	
 	--If there is only 1 ball, use it, delete dodgeball item
-	if(ball:GetCurrentCharges() <= 1) then 
-		ball:SetCurrentCharges(0)
+	if(ball:GetCurrentCharges() <= 0) then 
 		deleteItem(keys)
 		return
 	else
@@ -137,8 +136,9 @@ function OnProjectileHit( hTarget, vLocation)
 			damage_type = DAMAGE_TYPE_PURE, -- Damage type, its pure, no reductions cause math bad
 			ability = hTarget.ability, -- The ability associated
 		}
-		
 		ApplyDamage( damage ) -- Apply this table using ApplyDamage global method	
+		createItemOnPoint(damage.victim:GetOrigin())
+
 	end
 	return false
 end
@@ -169,17 +169,28 @@ function deleteItem( keys )
 
 	for itemSlot = 0, 5, 1 do --a For loop is needed to loop through each slot and check if it is the item that it needs to drop
 		local Item = unit:GetItemInSlot( itemSlot ) -- uses a variable which gets the actual item in the slot specified starting at 0, 1st slot, and ending at 5,the 6th slot.
-		if Item ~= nil and Item:GetName() == itemName then -- makes sure that the item exists and making sure it is the correct item
+		if Item ~= nil and Item:GetName() == itemName and Item:GetCurrentCharges() == 0 then -- makes sure that the item exists and making sure it is the correct item
 			unit:RemoveItem(Item) -- finally, the item is removed from the original units inventory.
+			break
 		end
 	end
 end
-
 
 --[[Create an item on this specific point
 This is used for when the ball hits an individual, or, runs out of its 
 length. Acting as dodgeball, must be associated with a team to determine where a valid random spot is 
 for the ball to spawn]]
-function createItemOnPoint()
+function createItemOnPoint( point )
+	
+	local newItem = CreateItem("item_dodgeball_datadriven", nil, nil) -- creates a new variable which recreates the item we want to drop and then sets it to have no owner
+	if(point ~= nil) then	
+    	CreateItemOnPositionSync(point, newItem) -- takes the newItem variable and creates the physical item at the killed unit's location
+	else
+		CreateItemOnPositionSync({0.0,0.0,0.0}, newItem)
+	end
+	newItem:SetCurrentCharges(1)
+end
 
+function missedProjectile( keys )
+	print("end of projectile")
 end

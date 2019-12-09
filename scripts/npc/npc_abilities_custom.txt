@@ -1044,4 +1044,41 @@
 			}
 		}
 	}
+
+	//=================================================================================================================
+	// Ability: Lina Laguna Blade Lua
+	//=================================================================================================================
+	"puck_phase_shift"
+    {
+        // General
+        //-------------------------------------------------------------------------------------------------------------
+        "ID"                    "5072"                                                        // unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
+        "AbilityBehavior"                "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_MOVEMENT | DOTA_ABILITY_BEHAVIOR_CHANNELLED | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_ATTACK"
+        "AbilitySound"                    "Hero_Puck.Phase_Shift"
+
+        // Casting
+        //-------------------------------------------------------------------------------------------------------------
+        "AbilityCastPoint"                "0 0 0 0"
+        "AbilityChannelTime"            "0.75 1.50 2.25 3.25"
+
+        // Time        
+        //-------------------------------------------------------------------------------------------------------------
+        "AbilityCooldown"                "1.25"
+
+        // Cost
+        //-------------------------------------------------------------------------------------------------------------
+        "AbilityManaCost"                "0 0 0 0"
+
+        // Special
+        //-------------------------------------------------------------------------------------------------------------
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"                    "FIELD_FLOAT"
+                "duration"                    "0.75 1.50 2.25 3.25"
+            }
+        }
+        "AbilityCastAnimation"        "ACT_DOTA_CAST_ABILITY_3"
+    }
 }

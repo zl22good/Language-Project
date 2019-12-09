@@ -197,6 +197,14 @@
 		"ItemShareability"				"ITEM_FULLY_SHAREABLE" //This used to be ITEM_NOT_SHAREABLE
 		"ItemDeclarations"				"DECLARE_PURCHASES_TO_TEAMMATES | DECLARE_PURCHASES_TO_SPECTATORS"
 		
+		"OnProjectileFinish"
+		{
+			"RunScript"
+			{
+			    "ScriptFile"    "scripts/vscripts/item_dodgeball.lua"
+			    "Function"      "missedProjectile"
+			}
+		}
     
 		"OnProjectileHitUnit"
 		{			
@@ -223,12 +231,6 @@
 				"ScriptFile"			"scripts/vscripts/item_dodgeball.lua"
 				"Function"			"DropItemOnDeath"
 			}
-		}
-
-		"OnProjectileThink"
-		{
-				"ScriptFile"    "scripts/vscripts/item_dodgeball.lua"
-		        "Function"      "OnProjectileThink"
 		}
 
 		"AbilitySpecial"
