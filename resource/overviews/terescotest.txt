@@ -1,0 +1,8 @@
+terescotest
+{
+	material materials/overviews/terescotest.vmat
+	pos_x -1809
+	pos_y 1974
+	scale 3.829
+}
+

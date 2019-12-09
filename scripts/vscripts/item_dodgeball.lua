@@ -33,7 +33,7 @@ function DropItemOnDeath(keys) -- keys is the information sent by the ability
 	local killedUnit = EntIndexToHScript( keys.caster_entindex ) -- EntIndexToHScript takes the keys.caster_entindex, which is the number assigned to the entity that ran the function from the ability, and finds the actual entity from it.
 	local itemName = tostring(keys.ability:GetAbilityName()) -- In order to drop only the item that ran the ability, the name needs to be grabbed. keys.ability gets the actual ability and then GetAbilityName() gets the configname of that ability such as juggernaut_blade_dance.
 	if killedUnit:IsHero() or killedUnit:HasInventory() then -- In order to make sure that the unit that died actually has items, it checks if it is either a hero or if it has an inventory.
-		Say(nil, ("Goodbye: "  .. keys.ability:GetInitialCharges()), false)
+		Say(nil, "That was cute", false)
 		for itemSlot = 0, 5, 1 do --a For loop is needed to loop through each slot and check if it is the item that it needs to drop
         	if killedUnit ~= nil then --checks to make sure the killed unit is not nonexistent.
         		local Item = killedUnit:GetItemInSlot( itemSlot ) -- uses a variable which gets the actual item in the slot specified starting at 0, 1st slot, and ending at 5,the 6th slot.
@@ -90,6 +90,8 @@ function ThrowBall( keys )
 	keys.ability.ball_width = keys.ability:GetSpecialValueFor( "ball_width" )
 	keys.ability.tooltip_duration = keys.ability:GetSpecialValueFor( "tooltip_duration" )
 	keys.ability.ball_damage = keys.ability:GetSpecialValueFor( "ball_damage" )
+	keys.ability.charges = keys.ability:GetCurrentCharges()
+	keys.ability.owner = EntIndexToHScript( keys.caster_entindex )
 
 	--Gets the correct direction to throw/aim projectile
 	keys.ability.ball_direction = (target_point - caster_location):Normalized()
@@ -110,6 +112,7 @@ function ThrowBall( keys )
 		iUnitTargetFlags = DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES, -- Taret flag associated to magic immune enemies, look up on api
 		bProvidesVision = true, --Does it get rid of fog of war?
 		iVisionTeamNumber = keys.caster:GetTeamNumber(), -- Whos vision should it be for
+
 	}
 
 	--Start time and location at start
@@ -126,7 +129,9 @@ end
 --[[This projectile hit something congrats! Associated with KV
 "OnProjectileHitUnit" and "Run script"]]
 function OnProjectileHit( hTarget, vLocation)
-	
+	local killer = hTarget.ability.owner
+	print(killer)
+
 	--If we have a target that it hit, calculate the damage
 	if hTarget ~= nil then
 		local damage = {
@@ -138,7 +143,9 @@ function OnProjectileHit( hTarget, vLocation)
 		}
 		ApplyDamage( damage ) -- Apply this table using ApplyDamage global method	
 		createItemOnPoint(damage.victim:GetOrigin())
-
+		if(damage.ability.charges == 0) then
+			removeDodgeballOnHit(killer)
+		end
 	end
 	return false
 end
@@ -180,17 +187,40 @@ end
 This is used for when the ball hits an individual, or, runs out of its 
 length. Acting as dodgeball, must be associated with a team to determine where a valid random spot is 
 for the ball to spawn]]
-function createItemOnPoint( point )
+function createItemOnPoint( point, owner )
 	
 	local newItem = CreateItem("item_dodgeball_datadriven", nil, nil) -- creates a new variable which recreates the item we want to drop and then sets it to have no owner
 	if(point ~= nil) then	
     	CreateItemOnPositionSync(point, newItem) -- takes the newItem variable and creates the physical item at the killed unit's location
 	else
-		CreateItemOnPositionSync({0.0,0.0,0.0}, newItem)
+		print(owner:GetTeamNumber())
+		if(owner:GetTeamNumber() == 3) then
+			point = Vector(-448.0,65.8,192.0)			
+		else
+			point = Vector(625.85,88.5,136)
+		end
+		CreateItemOnPositionSync(point, newItem)
 	end
 	newItem:SetCurrentCharges(1)
 end
 
 function missedProjectile( keys )
-	print("end of projectile")
+	printKVTable(keys)
+	createItemOnPoint(nil, keys.ability.owner)
+	local ball = keys.ability
+	if(ball.charges == 0) then
+		deleteItem(keys)
+	end
+end
+
+function removeDodgeballOnHit(hero)
+	local itemName = "item_dodgeball_datadriven"
+	for itemSlot = 0, 5, 1 do --a For loop is needed to loop through each slot and check if it is the item that it needs to drop
+		local Item = hero:GetItemInSlot( itemSlot ) -- uses a variable which gets the actual item in the slot specified starting at 0, 1st slot, and ending at 5,the 6th slot.
+		print(Item)
+		if Item ~= nil and Item:GetName() == itemName and Item:GetCurrentCharges() == 0 then -- makes sure that the item exists and making sure it is the correct item
+			hero:RemoveItem(Item) -- finally, the item is removed from the original units inventory.
+			break
+		end
+	end
 end
