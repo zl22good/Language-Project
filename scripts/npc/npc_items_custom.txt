@@ -171,7 +171,7 @@
 		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO"
 
 		"AbilityCastAnimation"			"ACT_DOTA_DISABLED"
-		"AbilityTextureName"			"vengefulspirit_wave_of_terror_lua"//"item_dodgeball"
+		"AbilityTextureName"			"dodgeball"//"item_dodgeball"
 
 		"ScriptFile"					"item_dodgeball"
 

@@ -1,0 +1,18 @@
+#LoadingScreenImage{
+    background-image: url("temp.jpg");
+}
+.LoadRoot{
+    background-image: url("temp.jpg");
+}
+
+#loadingScreenContent{
+    background-image: url("temp.jpg");
+}
+
+#CustomLoadingScreenContainer{
+    background-image: url("temp.jpg");
+}
+
+#LoadingScreenSidebarContainer{
+    background-image: url("temp.jpg");
+}

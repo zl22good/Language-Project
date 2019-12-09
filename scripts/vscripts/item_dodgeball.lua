@@ -99,7 +99,7 @@ function ThrowBall( keys )
 	--Projectile info. To be used to create the 
 	--projectile
 	local info = {
-		EffectName = "particles/units/heroes/hero_vengeful/vengeful_wave_of_terror.vpcf", --Particle used, might change to ball
+		EffectName = "particles/vengeful_wave_of_terror.vpcf", --Particle used, might change to ball units/heroes/hero_vengeful/
 		Ability = keys.ability, -- Associated ability
 		vSpawnOrigin = keys.caster:GetOrigin(), -- Get casters origin when casted
 		fStartRadius = keys.ability.ball_width, --How wide the ball is
